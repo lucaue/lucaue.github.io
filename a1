@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Áudio</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.6.7/plyr.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+    
+    body {
+      height: 100vh;
+      overflow: hidden;
+      margin: 0px;
+    }   
+
+    .audio-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Open Sans', sans-serif;
+      justify-content: flex-start;
+      cursor: pointer; 
+      width: 100px; /* Ajuste esta largura se o player parecer cortado */
+    }
+
+    .audio-container img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      padding-right: 8px;
+      padding-left: 10px;
+    }
+
+    .audio-container .microphone-icon {
+      position: relative;
+      margin-left: -67px;
+      margin-bottom: -25px;
+      font-size: 22px;
+      color: #4ad954;
+    }
+
+    .audio-container .microphone-icon.blue {
+      color: #3db8ee;
+    }
+
+    .plyr--audio .plyr__control.plyr__tab-focus,
+    .plyr--audio .plyr__control:hover,
+    .plyr--audio .plyr__control[aria-expanded=false] {
+      background: rgba(0, 0, 0, 0);
+      background: var(--plyr-audio-control-background-hover, var(--plyr-color-main, var(--plyr-color-main, rgba(0, 0, 0, 0))));
+      color: rgba(0, 0, 0, 0);
+      color: var(--plyr-audio-control-color-hover, #797979)
+    }
+
+    .plyr--audio .plyr__controls {
+      background: rgba(0, 0, 0, 0);
+      background: var(--plyr-audio-controls-background, rgba(0, 0, 0, 0));
+      border-radius: inherit;
+      color: #4a5464;
+      color: var(--plyr-audio-control-color,#4a5464);
+      margin-left: 0px;
+      padding: 0px;
+    }
+
+    .plyr--audio .plyr__control--overlaid .plyr__control__icon {
+      font-size: 33px;
+    }
+
+    .plyr--full-ui input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      border: 0;
+      border-radius: 100%;
+      box-shadow: 0 1px 1px rgba(35,40,47,.15),0 0 0 1px rgba(35,40,47,.2);
+      box-shadow: var(--plyr-range-thumb-shadow,0 1px 1px rgba(35,40,47,.15),0 0 0 1px rgba(35,40,47,.2));
+      height: 13px;
+      height: var(--plyr-range-thumb-height,13px);
+      margin-top: -4px;
+      margin-top: calc(var(--plyr-range-thumb-height,13px)/2*-1 - var(--plyr-range-track-height,5px)/2*-1);
+      position: relative;
+      -webkit-transition: all .2s ease;
+      transition: all .2s ease;
+      width: 13px;
+      width: var(--plyr-range-thumb-height,13px);
+      background: var(--range-thumb-background, #4ad954);
+    }   
+
+    .plyr--full-ui input[type=range].blue::-webkit-slider-thumb {
+      background: var(--range-thumb-background-active, #3db8ee);
+    }
+  
+    .hide {
+      display: none;
+    }
+
+    /* Ajuste para garantir que os controles do Plyr tenham espaço */
+    .plyr__controls {
+        width: calc(100% - 70px); /* Ajuste conforme necessário, considerando a imagem e ícones */
+        /* Ou ajuste .audio-container width para acomodar tudo */
+    }
+
+    .plyr__controls .plyr__controls__item.plyr__progress__container:first-child,
+    .plyr__controls .plyr__controls__item.plyr__time+.plyr__time,
+    .plyr__controls .plyr__controls__item.plyr__time:first-child {
+      padding-left: 0;
+      display: block;
+      margin-left: 7.5px;
+    }
+
+    .plyr__time+.plyr__time:before {
+      content: "";
+      margin-right: var(--plyr-control-spacing);
+    }
+
+    .plyr--audio .plyr__controls .plyr__controls__item.plyr__time--current.hide,
+    .plyr--audio .plyr__controls .plyr__controls__item.plyr__time--duration.hide {
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="audio-container" id="audioContainer">
+    <audio class="plyr" src="https://dramaflix.com.br/wp-content/uploads/2025/05/prontooooo32-1.mp3"></audio>
+    <img src="https://i.postimg.cc/cHP1phR4/Chat-GPT-Image-6-de-abr-de-2025-21-36-57.png" alt="Imagem">
+    <div class="microphone-icon">
+      <i class="fas fa-microphone"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.plyr.io/3.6.7/plyr.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const player = new Plyr('.plyr', {
+        controls: ['play', 'progress', 'current-time', 'duration'],
+        autoplay: true, // <--- ADICIONE ESTA LINHA PARA TENTAR O AUTOPLAY
+        // Opcional: se o autoplay com som for bloqueado, você pode querer começar mudo.
+        // muted: true, 
+        // E depois remover o mudo com alguma interação do usuário ou programaticamente, se permitido.
+      });
+
+      const audioElement = document.querySelector('.plyr');
+      const currentTimeElement = document.querySelector('.plyr__time--current');
+      const durationElement = document.querySelector('.plyr__time--duration');
+      const microphoneIcon = document.querySelector('.microphone-icon');
+
+      // Se currentTimeElement ou durationElement não forem encontrados, evite erros
+      if (currentTimeElement) {
+        currentTimeElement.classList.add('hide'); // Adiciona a classe 'hide' ao iniciar
+      }
+
+      audioElement.addEventListener('play', function() {
+        if (currentTimeElement) currentTimeElement.classList.remove('hide');
+        if (durationElement) durationElement.classList.add('hide');
+        if (microphoneIcon) microphoneIcon.classList.add('blue'); // Adiciona a classe 'blue' para alterar a cor do ícone
+        // A classe 'blue' no audioElement para o slider já é feita pelo CSS: .plyr--full-ui input[type=range].blue::-webkit-slider-thumb
+        // Para que isso funcione, você precisaria adicionar a classe 'blue' ao elemento de range quando o áudio toca.
+        // O Plyr pode não expor o elemento range diretamente de forma fácil para adicionar a classe.
+        // É mais fácil usar a variável CSS como você já fez.
+        audioElement.style.setProperty('--range-thumb-background', '#3db8ee'); // Isso já muda a cor do thumb.
+      });
+
+      audioElement.addEventListener('pause', function() {
+        if (currentTimeElement) currentTimeElement.classList.add('hide');
+        if (durationElement) durationElement.classList.remove('hide');
+        // Aqui você pode querer remover a cor azul do microfone e resetar a cor do thumb se desejar
+        if (microphoneIcon) microphoneIcon.classList.remove('blue');
+        audioElement.style.setProperty('--range-thumb-background', '#4ad954'); // Volta para a cor original
+      });
+
+      const audioContainer = document.getElementById('audioContainer');
+      audioContainer.addEventListener('click', function() {
+        // Tenta clicar no botão de play/pause do Plyr
+        // player.togglePlay(); // Forma mais direta de interagir com o player Plyr
+        if (player.playing) {
+            player.pause();
+        } else {
+            player.play();
+        }
+      });
+
+      // OBSERVAÇÃO SOBRE SEU CÓDIGO ORIGINAL:
+      // A constante 'audioBox' estava sendo selecionada por '.audio-box', 
+      // mas não existe nenhum elemento com essa classe no seu HTML.
+      // Isso causaria um erro na linha 'audioBox.addEventListener'.
+      // Removi essa parte aqui para focar no autoplay e evitar o erro.
+      // Se 'audioBox' for um elemento que você adicionará depois, certifique-se de que ele exista.
+      // Além disso, o 'playPauseButton.addEventListener' parecia redundante,
+      // já que o 'audioContainer' já tem um evento de clique que faz o toggle.
+
+      // Importante sobre autoplay:
+      // Se o navegador bloquear o autoplay, você pode querer notificar o usuário
+      // ou fornecer um botão de play bem visível.
+      player.on('ready', event => {
+        // Tenta dar play programaticamente caso a opção autoplay não funcione devido a restrições
+        // Isso também pode ser bloqueado se não houver interação do usuário.
+        player.play().catch(error => {
+          console.warn("Autoplay foi impedido pelo navegador:", error);
+          // Aqui você pode, por exemplo, mostrar uma mensagem para o usuário clicar para tocar.
+        });
+      });
+    });
+  </script>
+</body>
+</html>
